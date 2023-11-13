@@ -37,7 +37,8 @@ int main(){
   secaoDeCaptura = pcap_open_live("wlan0", tamanho_maximo_do_pacote, 1, tempo_limite, cacheDeErros); 
   // handle = pcap_open_live("interface de rede", tamanho do pacote em bytes, 1 para ativar o modo promiscuo, tempo limite para capturar o pacote, errbuf para n gravar erros)
  
-  // Wlan0 é a interface de rede que sera usada, logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
+  // wlan0 é a interface de rede que sera usada,tambem pode ser substituida por eth0 para uma interface de rede cabeada
+  // logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
   // O valor 1 define o modo promiscuo se for 1, a interface captura todos os pacotes(inclusive os que são destinados a outras maquinas)
   // o valor 1000 define o tempo limite para a captura do pacote em ms
   // errbuf n permite que mensagens de erro sejam armazenadas
@@ -68,7 +69,10 @@ int main(){
       break;
     }
 
-    //grava o pacote em um arquivo
+    //grava o pacote em um arquivo----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    /*Um arquivo pcap contém essencialmente uma coleção de pacotes de rede que foram interceptados por meio de técnicas de detecção de pacotes. 
+    Esses pacotes encapsulam dados transmitidos por uma rede. 
+    A importância de um arquivo pcap reside na sua capacidade de facilitar a identificação de diversas anomalias nas operações da rede.*/
     char filename[255];
     sprintf(filename, "PascotesCapturados/%d.pcap", cabecalhoInfo.ts.tv_sec);
     FILE *fp = fopen(filename, "wb");

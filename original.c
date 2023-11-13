@@ -6,12 +6,13 @@
 #include <sys/types.h>
 
 int main(){
-  pcap_t *handle;
-  char errbuf[PCAP_ERRBUF_SIZE];
-  struct pcap_pkthdr header;
-  const uint8_t *packet;
+  
+  pcap_t *secaoDeCaptura;
+  char cacheDeErros[PCAP_ERRBUF_SIZE];
+  struct pcap_pkthdr cabecalhoInfo;
+  const uint8_t *pacotes;
 
-  //Abre a interface de rede wireless
+  //abre a interface de rede wireless-------------------------------------------------------------------------------------------------------------------------------------------------
   
   int tamanho_maximo_do_pacote;
   printf("QUAL O TAMANHO MAXIMO DO PACOTE(em bytes)?\n");
@@ -33,53 +34,54 @@ int main(){
     int tempo_limite = 1000;
   }
   
-
+  secaoDeCaptura = pcap_open_live("wlan0", tamanho_maximo_do_pacote, 1, tempo_limite, cacheDeErros); 
   // handle = pcap_open_live("interface de rede", tamanho do pacote em bytes, 1 para ativar o modo promiscuo, tempo limite para capturar o pacote, errbuf para n gravar erros)
-  handle = pcap_open_live("wlan0", tamanho_maximo_do_pacote, 1, tempo_limite, errbuf); 
-  // Wlan0 é a interface de rede que sera usada, logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
+ 
+  // wlan0 é a interface de rede que sera usada,tambem pode ser substituida por eth0 para uma interface de rede cabeada
+  // logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
   // O valor 1 define o modo promiscuo se for 1, a interface captura todos os pacotes(inclusive os que são destinados a outras maquinas)
   // o valor 1000 define o tempo limite para a captura do pacote em ms
   // errbuf n permite que mensagens de erro sejam armazenadas
   
-  if (handle == NULL) {
-    printf("Erro ao abrir a interface de rede: %s\n", errbuf);
+  if (secaoDeCaptura == NULL) {
+    printf("Erro ao abrir a interface de rede: %s\n", cacheDeErros);
     return 1;
   }
 
-  //Cria a pasta para armazenar os pacotes
+  //cria a pasta para guardar os pacotes--------------------------------------------------------------------------------------------------------------------------------------------------
   char *pasta = "PascotesCapturados";
 
-  int status = mkdir(pasta, 0755);
+  int status = mkdir(pasta, 0777);
 
-  //Verifica se a pasta foi criada com sucesso
+  //verifica se a pasta foi criada com sucesso
   if (status == 0) {
     printf("Pasta '%s' criada com sucesso.\n", pasta);
   } else {
     printf("Erro ao criar a pasta '%s'.\n", pasta);
   }
 
-  //Captura os pacotes
+  //captura os pacotes-------------------------------------------------------------------------------------------------------------------------------------------------------------------
   printf("A captura de pacotes foi iniciada!");
 
   while(1){
-    packet = pcap_next(handle, &header);
-    if (packet == NULL) {
+    pacotes = pcap_next(secaoDeCaptura, &cabecalhoInfo);
+    if (pacotes == NULL){
       break;
     }
 
-    //Grava o pacote em um arquivo
+    //grava o pacote em um arquivo
     char filename[255];
-    sprintf(filename, "PascotesCapturados/%d.pcap", header.ts.tv_sec);
+    sprintf(filename, "PascotesCapturados/%d.pcap", cabecalhoInfo.ts.tv_sec);
     FILE *fp = fopen(filename, "wb");
     if (fp == NULL) {
       printf("Erro ao abrir o arquivo: %s\n", filename);
       return 1;
     }
-    fwrite(packet, header.caplen, 1, fp);
+    fwrite(pacotes, cabecalhoInfo.caplen, 1, fp);
     fclose(fp);
   }
- //Fecha a interface de rede
-  pcap_close(handle);
+ //encerra interface de rede
+  pcap_close(secaoDeCaptura);
 
   return 0;
 }
