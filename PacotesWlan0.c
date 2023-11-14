@@ -73,7 +73,7 @@ int main(){
   }
 
   //captura os pacotes-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  printf("A captura de pacotes foi iniciada!\n");
+  printf("A captura de pacotes foi iniciada!\n\n");
   animacao_de_execucao();
 
  // Loop que captura os pacotes continuamete
