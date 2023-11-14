@@ -63,7 +63,7 @@ int main(){
   }
 
   //cria a pasta para guardar os pacotes
-  char *pasta = "PascotesCapturados";
+  char *pasta = "Pascotes";
 
   int status = mkdir(pasta, 0777);
 
@@ -94,7 +94,7 @@ int main(){
     */
 
     char filename[255];
-    sprintf(filename, "PascotesCapturados/%d.pcap", cabecalhoInfo.ts.tv_sec);
+    sprintf(filename, "Pacotes/%d.pcap", cabecalhoInfo.ts.tv_sec);
     FILE *fp = fopen(filename, "wb");
     if (fp == NULL) {
       printf("Erro ao abrir o arquivo: %s\n", filename);
