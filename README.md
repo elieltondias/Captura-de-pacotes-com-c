@@ -16,7 +16,7 @@ A interface de rede pode ser alterada no arquivo /src/capturar_pacotes.c
 
 Para compilar o código-fonte, execute o seguinte comando no terminal:
 1. **Compilação:**
-   ~gcc -o capturar_pacotes capturar_pacotes.c -lpcap
+   gcc -o capturar_pacotes capturar_pacotes.c -lpcap
 
 3. **Execução**
-   #gcc ./capturar_pacotes
+   sudo ./capturar_pacotes

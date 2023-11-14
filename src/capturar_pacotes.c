@@ -6,13 +6,13 @@
 #include <sys/types.h>
 
 
-// Cria uma animação para a execução
-void animacao_de_execucao() {
+// Cria uma animação curta para a execução
+void animacao_de_execucao(){
     char animacaoDeCaracteres[] = {'|', '/', '-', '\\'};
 
     int i;
-    for (i = 0; i < 50000; i++) {
-        printf("\r%c Capturando Pacotes... (aperte Ctrl + c para cancelar!) %c", animacaoDeCaracteres[i % 4], animacaoDeCaracteres[i % 4]);
+    for (i = 0; i < 200; i++) {
+        printf("\r%c Voce tem 30 segundos caso queira cancelar antes de iniciar... (Ctrl + c para cancelar!) %c", animacaoDeCaracteres[i % 4], animacaoDeCaracteres[i % 4]);
         fflush(stdout);
         usleep(100000);  // pausa por 100 milissegundos (100000 microssegundos)
     }
@@ -51,19 +51,21 @@ int main(){
   secaoDeCaptura = pcap_open_live("wlan0", tamanho_maximo_do_pacote, 1, tempo_limite, cacheDeErros); 
   // secaoDeCaptura = pcap_open_live("interface de rede", tamanho do pacote em bytes, 1 para ativar o modo promiscuo, tempo limite para capturar o pacote, eliminaar cache e erros)
  
-  // wlan0 é a interface de rede que sera usada,tambem pode ser substituida por eth0 para uma interface de rede cabeada
-  // logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
-  // O valor 1 define o modo promiscuo se for 1, a interface captura todos os pacotes(inclusive os que são destinados a outras maquinas)
-  // o valor 1000 define o tempo limite para a captura do pacote em ms
-  // errbuf n permite que mensagens de erro sejam armazenadas
-  
+  /*
+    wlan0 é a interface de rede que sera usada,tambem pode ser substituida por eth0 para uma interface de rede cabeada
+    logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
+    O valor 1 define o modo promiscuo se for 1, a interface captura todos os pacotes(inclusive os que são destinados a outras maquinas)
+    o valor 1000 define o tempo limite para a captura do pacote em ms
+    errbuf n permite que mensagens de erro sejam armazenadas
+  */
+
   if (secaoDeCaptura == NULL) {
     printf("Erro ao abrir a interface de rede: %s\n", cacheDeErros);
     return 1;
   }
 
   //cria a pasta para guardar os pacotes
-  char *pasta = "Pascotes";
+  char *pasta = "Pacotes";
 
   int status = mkdir(pasta, 0777);
 
@@ -75,16 +77,17 @@ int main(){
   }
 
   //captura os pacotes
-  printf("A captura de pacotes foi iniciada!\n\n");
+  printf("A captura de pacotes sera iniciada iniciada em 20 segundos!\n\n");
   animacao_de_execucao();
+  printf("CAPTURA EM EXECUÇÃO!\n");
 
- // Loop que captura os pacotes continuamete
+  // Loop que captura os pacotes continuamete
   while(1){
     pacotes = pcap_next(secaoDeCaptura, &cabecalhoInfo);
     if (pacotes == NULL){
       break;
     }
-
+  
     //grava o pacote em um arquivo
 
     /*
@@ -93,19 +96,28 @@ int main(){
     A importância de um arquivo pcap reside na sua capacidade de facilitar a identificação de diversas anomalias nas operações da rede.
     */
 
+    // Cria um nome de arquivo com base no carimbo de data/hora
     char filename[255];
     sprintf(filename, "Pacotes/%d.pcap", cabecalhoInfo.ts.tv_sec);
-    FILE *fp = fopen(filename, "wb");
-    if (fp == NULL) {
-      printf("Erro ao abrir o arquivo: %s\n", filename);
+
+    // Abre um arquivo de despejo para escrever
+    pcap_dumper_t *pcapDumper = pcap_dump_open(secaoDeCaptura, filename);
+
+    if (pcapDumper == NULL){
+      fprintf(stderr, "Erro ao abrir o arquivo de despejo: %s\n", filename);
       return 1;
     }
-    fwrite(pacotes, cabecalhoInfo.caplen, 1, fp);
-    fclose(fp);
-  }
+
+    // Grava o pacote no arquivo de despejo
+    pcap_dump((unsigned char *) pcapDumper, &cabecalhoInfo, pacotes);
   
- //encerra interface de rede
+    // Fecha o arquivo de despejo
+    pcap_dump_close(pcapDumper);
+  }
+
+  //encerra interface de rede
   pcap_close(secaoDeCaptura);
+  
 
   return 0;
 }
