@@ -63,6 +63,7 @@ int main(){
   //captura os pacotes-------------------------------------------------------------------------------------------------------------------------------------------------------------------
   printf("A captura de pacotes foi iniciada!\n");
 
+ // Loop que captura os pacotes continuamete
   while(1){
     pacotes = pcap_next(secaoDeCaptura, &cabecalhoInfo);
     if (pacotes == NULL){
