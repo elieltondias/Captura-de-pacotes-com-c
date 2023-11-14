@@ -7,9 +7,10 @@ Ideal para quem deseja analisar o tráfego de rede, realizar diagnósticos ou ap
 ## Como Usar
 Certifique-se de ter a biblioteca libpcap instalada
 
+Certifique-se de ter um compilador C instalado no seu sistema.
+
+Para compilar o código-fonte, execute o seguinte comando no terminal:
 1. **Compilação:**
-   Certifique-se de ter um compilador C instalado no seu sistema.
-   Para compilar o código-fonte, execute o seguinte comando no terminal:
    ~gcc -o pacoteswlan0 PacotesWlan0.c -lpcap
 
 3. **Execução**
