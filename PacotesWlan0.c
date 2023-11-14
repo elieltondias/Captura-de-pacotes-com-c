@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-void loadingAnimation() {
+void animacao_de_execucao() {
     char animacaoDeCaracteres[] = {'|', '/', '-', '\\'};
 
     int i;
@@ -74,7 +74,7 @@ int main(){
 
   //captura os pacotes-------------------------------------------------------------------------------------------------------------------------------------------------------------------
   printf("A captura de pacotes foi iniciada!\n");
-  loadingAnimation();
+  animacao_de_execucao();
 
  // Loop que captura os pacotes continuamete
   while(1){
