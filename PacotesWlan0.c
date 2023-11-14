@@ -5,6 +5,18 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+void loadingAnimation() {
+    char animacaoDeCaracteres[] = {'|', '/', '-', '\\'};
+
+    int i;
+    for (i = 0; i < 50000; i++) {
+        printf("\r%c Capturando Pacotes... (aperte Ctrl + c para cancelar!) %c", animacaoDeCaracteres[i % 4], animacaoDeCaracteres[i % 4]);
+        fflush(stdout);
+        usleep(100000);  // pausa por 100 milissegundos (100000 microssegundos)
+    }
+    printf("\n");
+}
+
 int main(){
   
   pcap_t *secaoDeCaptura;
@@ -62,6 +74,7 @@ int main(){
 
   //captura os pacotes-------------------------------------------------------------------------------------------------------------------------------------------------------------------
   printf("A captura de pacotes foi iniciada!\n");
+  loadingAnimation();
 
  // Loop que captura os pacotes continuamete
   while(1){
