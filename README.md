@@ -9,12 +9,14 @@ Certifique-se de ter a biblioteca libpcap instalada
 
 Certifique-se de ter um compilador C instalado no seu sistema.
 
+Este codigo suporta a captura de pacotes de rede em tempo real.
+Permite a escolha to tamanho maximo de cada pacote e o tempo limite para capturalos.
+
+A interface de rede pode ser alterada no arquivo /src/capturar_pacotes.c
+
 Para compilar o código-fonte, execute o seguinte comando no terminal:
 1. **Compilação:**
-   ~gcc -o pacoteswlan0 PacotesWlan0.c -lpcap
+   ~gcc -o capturar_pacotes capturar_pacotes.c -lpcap
 
 3. **Execução**
-   #gcc ./pacoteswlan0
-
-Este capturador suporta a captura de pacotes de rede em tempo real.
-Permite a escolha to tamanho maximo de cada pacote e o tempo limite para capturalos.
+   #gcc ./capturar_pacotes
