@@ -8,10 +8,11 @@ Ideal para quem deseja analisar o tráfego de rede, realizar diagnósticos ou ap
 Certifique-se de ter a biblioteca libpcap instalada
 
 1. **Compilação:**
-   Certifique-se de ter um compilador C instalado no seu sistema. Para compilar o código-fonte, execute o seguinte comando no terminal:
+   Certifique-se de ter um compilador C instalado no seu sistema.
+   Para compilar o código-fonte, execute o seguinte comando no terminal:
    ~gcc -o pacoteswlan0 PacotesWlan0.c -lpcap
 
-2. **Execução**
+3. **Execução**
    #gcc ./pacoteswlan0
 
 Este capturador suporta a captura de pacotes de rede em tempo real.
