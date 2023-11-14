@@ -5,6 +5,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+
+// Cria uma animação para a execução
 void animacao_de_execucao() {
     char animacaoDeCaracteres[] = {'|', '/', '-', '\\'};
 
@@ -24,7 +26,7 @@ int main(){
   struct pcap_pkthdr cabecalhoInfo;
   const uint8_t *pacotes;
 
-  //abre a interface de rede wireless-------------------------------------------------------------------------------------------------------------------------------------------------
+  //abre a interface de rede wireless
   
   int tamanho_maximo_do_pacote;
   printf("QUAL O TAMANHO MAXIMO DO PACOTE(em bytes)?\n");
@@ -60,7 +62,7 @@ int main(){
     return 1;
   }
 
-  //cria a pasta para guardar os pacotes--------------------------------------------------------------------------------------------------------------------------------------------------
+  //cria a pasta para guardar os pacotes
   char *pasta = "PascotesCapturados";
 
   int status = mkdir(pasta, 0777);
@@ -72,7 +74,7 @@ int main(){
     printf("Erro ao criar a pasta '%s'.\n", pasta);
   }
 
-  //captura os pacotes-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  //captura os pacotes
   printf("A captura de pacotes foi iniciada!\n\n");
   animacao_de_execucao();
 
@@ -83,10 +85,14 @@ int main(){
       break;
     }
 
-    //grava o pacote em um arquivo----------------------------------------------------------------------------------------------------------------------------------------------------------------
-    /*Um arquivo .pcap contém essencialmente uma coleção de pacotes de rede que foram interceptados por meio de técnicas de detecção de pacotes. 
+    //grava o pacote em um arquivo
+
+    /*
+    Um arquivo .pcap contém essencialmente uma coleção de pacotes de rede que foram interceptados por meio de técnicas de detecção de pacotes. 
     Esses pacotes encapsulam dados transmitidos por uma rede. 
-    A importância de um arquivo pcap reside na sua capacidade de facilitar a identificação de diversas anomalias nas operações da rede.*/
+    A importância de um arquivo pcap reside na sua capacidade de facilitar a identificação de diversas anomalias nas operações da rede.
+    */
+
     char filename[255];
     sprintf(filename, "PascotesCapturados/%d.pcap", cabecalhoInfo.ts.tv_sec);
     FILE *fp = fopen(filename, "wb");
@@ -97,6 +103,7 @@ int main(){
     fwrite(pacotes, cabecalhoInfo.caplen, 1, fp);
     fclose(fp);
   }
+  
  //encerra interface de rede
   pcap_close(secaoDeCaptura);
 
