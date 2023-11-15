@@ -1,4 +1,4 @@
-# Esta é uma ferramenta de terminal escrita em C que captura os pacotes da rede de forma promíscua.
+# Esta é uma ferramenta de terminal linux escrita em C que captura os pacotes da rede de forma promíscua.
 
 Bem-vindo ao projeto que desenvolvemos na materia de Técnicas de Desenvolvimento de Algoritmos no curso de ciencia da computação!
 Esta é uma ferramenta de terminal simples, escrita em C, que permite a captura de pacotes de rede.
