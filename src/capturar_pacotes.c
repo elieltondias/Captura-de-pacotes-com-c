@@ -35,6 +35,7 @@ int main(){
   printf("\033[2J\033[H"); // a sequência \033[2J limpa a tela, e \033[H move o cursor para a posição superior esquerda
 
   
+  int tamanho_maximo_do_pacote, tempo_limite;
   pcap_t *secaoDeCaptura;
   char cacheDeErros[PCAP_ERRBUF_SIZE];
   struct pcap_pkthdr cabecalhoInfo;
@@ -42,21 +43,22 @@ int main(){
 
   // 2. ABRE A INTERFACE DE REDE WIRELESS
   
-  int tamanho_maximo_do_pacote;
-  printf("Tamanho maximo do pacote(em bytes)?\n");
+  printf("Tamanho maximo do pacote(em mb)?\n");
   scanf("%i", &tamanho_maximo_do_pacote);
-  if(tamanho_maximo_do_pacote = 0){
-    tamanho_maximo_do_pacote = 1000000;
-  }else{}
-
-  int tempo_limite;
-  printf("Tempo limite para cada pacote? (em ms)\n");
-  scanf("%i", &tempo_limite);
-  if(tempo_limite = 0){
-    int tempo_limite = 1000;
-  }else{}
   
-  secaoDeCaptura = pcap_open_live("wlan0", tamanho_maximo_do_pacote, 1, tempo_limite, cacheDeErros); 
+  if(tamanho_maximo_do_pacote == 0){
+    tamanho_maximo_do_pacote = 1;
+  }
+  int converter_tamanho = tamanho_maximo_do_pacote * 1000000;
+
+  printf("Tempo limite para cada pacote? (em segundos)\n");
+  scanf("%i", &tempo_limite);
+  if(tempo_limite == 0){
+    int tempo_limite = 1;
+  }
+  int converter_tempo = tempo_limite * 1000;
+  
+  secaoDeCaptura = pcap_open_live("wlan0", converter_tamanho, 1, converter_tempo, cacheDeErros); 
   // secaoDeCaptura = pcap_open_live("interface de rede", tamanho do pacote em bytes, 1 para ativar o modo promiscuo, tempo limite para capturar o pacote, eliminaar cache e erros)
  
   /*
@@ -110,14 +112,14 @@ int main(){
     */
 
     //cria um nome de arquivo com base no carimbo de data/hora
-    char filename[255];
-    sprintf(filename, "Pacotes/%d.pcap", cabecalhoInfo.ts.tv_sec);
+    char nome_do_arquivo[255];
+    sprintf(nome_do_arquivo, "Pacotes/%d.pcap", cabecalhoInfo.ts.tv_sec);
 
     //abre um arquivo de despejo para escrever
-    pcap_dumper_t *pcapDumper = pcap_dump_open(secaoDeCaptura, filename);
+    pcap_dumper_t *pcapDumper = pcap_dump_open(secaoDeCaptura, nome_do_arquivo);
 
     if (pcapDumper == NULL){
-      fprintf(stderr, "Erro ao abrir o arquivo de despejo: %s\n", filename);
+      fprintf(stderr, "Erro ao abrir o arquivo de despejo: %s\n", nome_do_arquivo);
       return 1;
     }
 
