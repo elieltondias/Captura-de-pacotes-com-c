@@ -5,7 +5,7 @@ Esta é uma ferramenta de terminal simples, escrita em C, que permite a captura 
 Ideal para quem deseja analisar o tráfego de rede, realizar diagnósticos ou aprender sobre o funcionamento interno das comunicações de dados.
 
 ## Como Usar
-Certifique-se de ter a biblioteca libpcap instalada
+Certifique-se de ter a biblioteca libpcap-dev ou libpcap-devel (depende da distribuição) instalada
 
 Certifique-se de ter um compilador C instalado no seu sistema.
 
