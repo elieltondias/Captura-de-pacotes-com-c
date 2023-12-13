@@ -1,5 +1,5 @@
 # Esta é codigo simples escrita em C que captura os pacotes da rede.
-Esta é uma ferramenta de terminal simples, escrita em C, que permite a captura de pacotes de rede.
+Esta é um codigo simples, escrita em C, que permite a captura de pacotes de rede.
 Ideal para quem deseja analisar o tráfego de rede, realizar diagnósticos ou aprender sobre o funcionamento interno das comunicações de dados.
 
 ## Como Usar
