@@ -13,7 +13,7 @@ A interface de rede pode ser alterada no arquivo /src/capturar_pacotes.c
 
 Para compilar o código-fonte, execute o seguinte comando no terminal:
 1. **Compilação:**
-   gcc -o pacotes pacotes.c -lpcap
+   gcc -o sniffer sniffer.c -lpcap
 
 3. **Execução**
-   sudo ./capturar_pacotes
+   sudo ./sniffer
