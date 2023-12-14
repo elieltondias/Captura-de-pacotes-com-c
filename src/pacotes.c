@@ -1,12 +1,10 @@
 #include <pcap.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 
 
-//cria uma animação curta para a execução
+// cria uma animação curta para a execução
 void animacao_de_execucao(){
     char animacaoDeCaracteres[] = {'|', '/', '-', '\\'};
 
@@ -14,7 +12,9 @@ void animacao_de_execucao(){
     for (i = 0; i < 100; i++) {
         printf("\r%c Captura sera iniciada... (Ctrl + c para cancelar!) %c", animacaoDeCaracteres[i % 4], animacaoDeCaracteres[i % 4]);
         fflush(stdout);
-        usleep(10000);  //pausa por 10 milissegundos
+
+        //pausa por 10 milissegundos
+        usleep(10000);  
     }
     printf("\n");
 }
@@ -32,55 +32,30 @@ int main(){
 
   
   //comando "clear" para limpar o terminal
-  printf("\033[2J\033[H"); // a sequência \033[2J limpa a tela, e \033[H move o cursor para a posição superior esquerda
+  // a sequência \033[2J limpa a tela, e \033[H move o cursor para a posição superior esquerda
+  printf("\033[2J\033[H");
 
-  
   int tamanho_maximo_do_pacote, tempo_limite;
   pcap_t *secaoDeCaptura;
   char cacheDeErros[PCAP_ERRBUF_SIZE];
   struct pcap_pkthdr cabecalhoInfo;
   const uint8_t *pacotes;
 
-  // 2. ABRE A INTERFACE DE REDE WIRELESS
-  
-  printf("Tamanho maximo do pacote(em mb)?\n");
-  scanf("%i", &tamanho_maximo_do_pacote);
-  
-  if(tamanho_maximo_do_pacote == 0){
-    tamanho_maximo_do_pacote = 1;
-  }
-  int converter_tamanho = tamanho_maximo_do_pacote * 1000000;
-
-  printf("Tempo limite para cada pacote? (em segundos)\n");
-  scanf("%i", &tempo_limite);
-  if(tempo_limite == 0){
-    int tempo_limite = 1;
-  }
-  int converter_tempo = tempo_limite * 1000;
-  
-  secaoDeCaptura = pcap_open_live("wlan0", converter_tamanho, 1, converter_tempo, cacheDeErros); 
-  // secaoDeCaptura = pcap_open_live("interface de rede", tamanho do pacote em bytes, 1 para ativar o modo promiscuo, tempo limite para capturar o pacote, eliminaar cache e erros)
- 
-  /*
-    wlan0 é a interface de rede que sera usada,tambem pode ser substituida por eth0 para uma interface de rede cabeada
-    logo em seguida o tamanho maximo do pacote 1000000(definida em bytes) igual a 1mb
-    O valor 1 define o modo promiscuo se for 1, a interface captura todos os pacotes(inclusive os que são destinados a outras maquinas)
-    o valor 1000 define o tempo limite para a captura do pacote em ms
-    errbuf n permite que mensagens de erro sejam armazenadas
-  */
+  // 2. ABRE A INTERFACE DE REDE WIRELESS  
+  secaoDeCaptura = pcap_open_live("wlan0", 1000000, 1, 1000, cacheDeErros); 
 
   if (secaoDeCaptura == NULL) {
     printf("Erro ao abrir a interface de rede: %s\n\n", cacheDeErros);
     return 1;
   }
 
-  // 3. CRIA PASTA PARA GUARDAR OS PACOTES
+  // 3. CRIA UMA PASTA PARA GUARDAR OS PACOTES
 
   char *pasta = "Pacotes";
 
   int status = mkdir(pasta, 0777);
 
-  //verifica se a pasta foi criada com sucesso
+  // verifica se a pasta foi criada com sucesso
   if (status == 0) {
     printf("Pasta '%s' criada com sucesso.\n\n", pasta);
   } else {
@@ -89,33 +64,27 @@ int main(){
 
   // 4. CAPTURA OS PACOTES
 
-  //animação de espera
+  // animação de espera
   animacao_de_execucao();
-  //limpa o terminal
+  // limpa o terminal
   printf("\033[2J\033[H");
 
   printf("CAPTURA EM EXECUÇÃO! (Ctrl + c para cancelar!)\n");
 
-  //loop que captura os pacotes continuamete
+  // loop que captura os pacotes continuamete
   while(1){
     pacotes = pcap_next(secaoDeCaptura, &cabecalhoInfo);
     if (pacotes == NULL){
       break;
     }
   
-    //grava o pacote em um arquivo
+    // grava o pacote em um arquivo
 
-    /*
-    Um arquivo .pcap contém essencialmente uma coleção de pacotes de rede que foram interceptados por meio de técnicas de detecção de pacotes. 
-    Esses pacotes encapsulam dados transmitidos por uma rede. 
-    A importância de um arquivo pcap reside na sua capacidade de facilitar a identificação de diversas anomalias nas operações da rede.
-    */
-
-    //cria um nome de arquivo com base no carimbo de data/hora
+    // cria um nome de arquivo com base no carimbo de data/hora
     char nome_do_arquivo[255];
     sprintf(nome_do_arquivo, "Pacotes/%d.pcap", cabecalhoInfo.ts.tv_sec);
 
-    //abre um arquivo de despejo para escrever
+    // abre um arquivo de despejo para escrever
     pcap_dumper_t *pcapDumper = pcap_dump_open(secaoDeCaptura, nome_do_arquivo);
 
     if (pcapDumper == NULL){
@@ -123,16 +92,15 @@ int main(){
       return 1;
     }
 
-    //grava o pacote no arquivo de despejo
+    // grava o pacote no arquivo de despejo
     pcap_dump((unsigned char *) pcapDumper, &cabecalhoInfo, pacotes);
   
-    //fecha o arquivo de despejo
+    // fecha o arquivo de despejo
     pcap_dump_close(pcapDumper);
   }
 
-  //encerra interface de rede
+  // encerra interface de rede
   pcap_close(secaoDeCaptura);
   
-
   return 0;
 }
