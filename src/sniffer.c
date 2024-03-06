@@ -42,7 +42,7 @@ int main(){
   const uint8_t *pacotes;
 
   // 2. ABRE A INTERFACE DE REDE WIRELESS  
-  secaoDeCaptura = pcap_open_live("wlan0", 1000000, 1, 1000, cacheDeErros); 
+  secaoDeCaptura = pcap_open_live("any", 1000000, 1, 1000, cacheDeErros); 
 
   if (secaoDeCaptura == NULL) {
     printf("Erro ao abrir a interface de rede: %s\n\n", cacheDeErros);
